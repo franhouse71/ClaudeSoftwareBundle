@@ -103,10 +103,23 @@ function Install-AutoHotkey {
     }
 }
 
+function Install-VSCode {
+    Write-Step "Visual Studio Code..."
+    if (Get-Command code -ErrorAction SilentlyContinue) { Write-Skipped "VS Code"; return }
+    try {
+        winget install --id Microsoft.VisualStudioCode --exact --silent --accept-package-agreements --accept-source-agreements
+        Refresh-Path
+        Write-Success "VS Code"
+    } catch {
+        Write-Failed "VS Code" "Run: winget install Microsoft.VisualStudioCode"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
 Install-WindowsTerminal
 Install-Git
 Install-AutoHotkey
+Install-VSCode
 Show-Summary
