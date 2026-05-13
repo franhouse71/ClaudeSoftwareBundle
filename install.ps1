@@ -39,8 +39,8 @@ function Show-Summary {
     Write-Host "======================================" -ForegroundColor Cyan
     foreach ($item in $script:summary) {
         switch ($item.Status) {
-            "Installed" { Write-Host "  OK  $($item.Tool)" -ForegroundColor Green }
-            "Skipped"   { Write-Host "  --  $($item.Tool) (already installed)" -ForegroundColor Gray }
+            "Installed" { Write-Host "  OK  $($item.Tool) installed" -ForegroundColor Green }
+            "Skipped"   { Write-Host "  --  $($item.Tool) already installed, skipping" -ForegroundColor Gray }
             "Failed"    { Write-Host "  !!  $($item.Tool) -- $($item.Hint)" -ForegroundColor Yellow }
         }
     }
