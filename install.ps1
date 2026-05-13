@@ -176,6 +176,21 @@ function Install-OpenWhispr {
     }
 }
 
+function Install-VSCodeExtensions {
+    Write-Step "VS Code extensions (Python, GitLens)..."
+    if (-not (Get-Command code -ErrorAction SilentlyContinue)) {
+        Write-Failed "VS Code Extensions" "VS Code not in PATH -- restart PowerShell and re-run"
+        return
+    }
+    try {
+        code --install-extension ms-python.python --force | Out-Null
+        code --install-extension eamodio.gitlens --force | Out-Null
+        Write-Success "VS Code Extensions"
+    } catch {
+        Write-Failed "VS Code Extensions" "Run: code --install-extension ms-python.python then code --install-extension eamodio.gitlens"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
@@ -187,4 +202,5 @@ Install-NodeJS
 Install-Uv
 Install-ClaudeCode
 Install-OpenWhispr
+Install-VSCodeExtensions
 Show-Summary
