@@ -79,8 +79,21 @@ function Install-WindowsTerminal {
     }
 }
 
+function Install-Git {
+    Write-Step "Git..."
+    if (Get-Command git -ErrorAction SilentlyContinue) { Write-Skipped "Git"; return }
+    try {
+        winget install --id Git.Git --exact --silent --accept-package-agreements --accept-source-agreements
+        Refresh-Path
+        Write-Success "Git"
+    } catch {
+        Write-Failed "Git" "Run: winget install Git.Git"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
 Install-WindowsTerminal
+Install-Git
 Show-Summary
