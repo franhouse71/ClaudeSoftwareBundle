@@ -202,7 +202,7 @@ function Deploy-AHKScript {
     }
 
     try {
-        Invoke-WebRequest "$GITHUB_RAW/assets/MyShortCuts.ahk" -OutFile $ahkDest
+        Invoke-WebRequest "$GITHUB_RAW/assets/MyShortCuts.ahk" -OutFile $ahkDest -UseBasicParsing
         $startupValue = "`"$ahkExe`" `"$ahkDest`""
         Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "MyAHKShortcuts" -Value $startupValue
         if (Test-Path $ahkExe) {
