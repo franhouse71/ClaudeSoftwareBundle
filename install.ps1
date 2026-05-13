@@ -91,9 +91,22 @@ function Install-Git {
     }
 }
 
+function Install-AutoHotkey {
+    Write-Step "AutoHotkey v2..."
+    $ahkExe = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+    if (Test-Path $ahkExe) { Write-Skipped "AutoHotkey v2"; return }
+    try {
+        winget install --id AutoHotkey.AutoHotkey --exact --silent --accept-package-agreements --accept-source-agreements
+        Write-Success "AutoHotkey v2"
+    } catch {
+        Write-Failed "AutoHotkey v2" "Run: winget install AutoHotkey.AutoHotkey"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
 Install-WindowsTerminal
 Install-Git
+Install-AutoHotkey
 Show-Summary
