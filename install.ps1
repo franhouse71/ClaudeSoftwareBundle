@@ -1,7 +1,7 @@
 # Claude Productivity Bundle Installer
-# Source: https://github.com/YOUR_GITHUB_USERNAME/ClaudeSoftwareBundle
+# Source: https://github.com/franhouse71/ClaudeSoftwareBundle
 
-$GITHUB_RAW = "https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/ClaudeSoftwareBundle/main"
+$GITHUB_RAW = "https://raw.githubusercontent.com/franhouse71/ClaudeSoftwareBundle/main"
 $script:summary = @()
 
 function Write-Banner {
