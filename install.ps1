@@ -54,6 +54,20 @@ function Show-Summary {
     Write-Host ""
 }
 
+function Ensure-Winget {
+    Write-Step "Checking winget (Windows Package Manager)..."
+    if (Get-Command winget -ErrorAction SilentlyContinue) {
+        Write-Skipped "winget"
+        return $true
+    }
+    Write-Host ""
+    Write-Host "  !! winget not found." -ForegroundColor Yellow
+    Write-Host "  -> Install 'App Installer' from the Microsoft Store, then re-run this script." -ForegroundColor Yellow
+    Write-Host ""
+    return $false
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
+if (-not (Ensure-Winget)) { exit 1 }
 Show-Summary
