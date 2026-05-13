@@ -67,7 +67,20 @@ function Ensure-Winget {
     return $false
 }
 
+function Install-WindowsTerminal {
+    Write-Step "Windows Terminal..."
+    $list = winget list --id Microsoft.WindowsTerminal --exact --accept-source-agreements | Out-String
+    if ($list -match "Microsoft.WindowsTerminal") { Write-Skipped "Windows Terminal"; return }
+    try {
+        winget install --id Microsoft.WindowsTerminal --exact --silent --accept-package-agreements --accept-source-agreements
+        Write-Success "Windows Terminal"
+    } catch {
+        Write-Failed "Windows Terminal" "Run: winget install Microsoft.WindowsTerminal"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
+Install-WindowsTerminal
 Show-Summary
