@@ -129,6 +129,18 @@ function Install-NodeJS {
     }
 }
 
+function Install-Uv {
+    Write-Step "uv (Python manager)..."
+    if (Get-Command uv -ErrorAction SilentlyContinue) { Write-Skipped "uv"; return }
+    try {
+        powershell -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/install.ps1 | iex"
+        Refresh-Path
+        Write-Success "uv"
+    } catch {
+        Write-Failed "uv" "Visit https://astral.sh/uv to install manually"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
@@ -137,4 +149,5 @@ Install-Git
 Install-AutoHotkey
 Install-VSCode
 Install-NodeJS
+Install-Uv
 Show-Summary
