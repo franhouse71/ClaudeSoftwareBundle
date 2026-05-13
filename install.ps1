@@ -64,13 +64,15 @@ function Ensure-Winget {
     Write-Host "  !! winget not found." -ForegroundColor Yellow
     Write-Host "  -> Install 'App Installer' from the Microsoft Store, then re-run this script." -ForegroundColor Yellow
     Write-Host ""
+    Add-Result "winget" "Failed" "Install 'App Installer' from the Microsoft Store, then re-run"
     return $false
 }
 
 function Install-WindowsTerminal {
     Write-Step "Windows Terminal..."
-    $list = winget list --id Microsoft.WindowsTerminal --exact --accept-source-agreements | Out-String
-    if ($list -match "Microsoft.WindowsTerminal") { Write-Skipped "Windows Terminal"; return }
+    # Windows Terminal is a Store app — Get-AppxPackage is more reliable than winget list
+    $pkg = Get-AppxPackage -Name "Microsoft.WindowsTerminal" -ErrorAction SilentlyContinue
+    if ($pkg) { Write-Skipped "Windows Terminal"; return }
     try {
         winget install --id Microsoft.WindowsTerminal --exact --silent --accept-package-agreements --accept-source-agreements
         Write-Success "Windows Terminal"
