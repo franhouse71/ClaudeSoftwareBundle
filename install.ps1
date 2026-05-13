@@ -141,6 +141,22 @@ function Install-Uv {
     }
 }
 
+function Install-ClaudeCode {
+    Write-Step "Claude Code CLI..."
+    if (Get-Command claude -ErrorAction SilentlyContinue) { Write-Skipped "Claude Code CLI"; return }
+    if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
+        Write-Failed "Claude Code CLI" "npm not in PATH -- restart PowerShell and re-run this script"
+        return
+    }
+    try {
+        npm install -g @anthropic-ai/claude-code
+        Refresh-Path
+        Write-Success "Claude Code CLI"
+    } catch {
+        Write-Failed "Claude Code CLI" "Run: npm install -g @anthropic-ai/claude-code"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
@@ -150,4 +166,5 @@ Install-AutoHotkey
 Install-VSCode
 Install-NodeJS
 Install-Uv
+Install-ClaudeCode
 Show-Summary
