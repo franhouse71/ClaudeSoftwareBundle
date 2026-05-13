@@ -6,7 +6,9 @@ One-command setup for a complete AI-powered coding environment on Windows.
 
 Open PowerShell and paste:
 
+```powershell
 powershell -ExecutionPolicy Bypass -Command "irm https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/ClaudeSoftwareBundle/main/install.ps1 | iex"
+```
 
 ## What gets installed
 
