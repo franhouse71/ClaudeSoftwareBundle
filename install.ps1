@@ -117,6 +117,18 @@ function Install-VSCode {
     }
 }
 
+function Install-NodeJS {
+    Write-Step "Node.js (LTS)..."
+    if (Get-Command node -ErrorAction SilentlyContinue) { Write-Skipped "Node.js"; return }
+    try {
+        winget install --id OpenJS.NodeJS.LTS --exact --silent --accept-package-agreements --accept-source-agreements
+        Refresh-Path
+        Write-Success "Node.js"
+    } catch {
+        Write-Failed "Node.js" "Run: winget install OpenJS.NodeJS.LTS"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
@@ -124,4 +136,5 @@ Install-WindowsTerminal
 Install-Git
 Install-AutoHotkey
 Install-VSCode
+Install-NodeJS
 Show-Summary
