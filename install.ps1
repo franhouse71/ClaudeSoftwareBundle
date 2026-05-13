@@ -157,6 +157,25 @@ function Install-ClaudeCode {
     }
 }
 
+function Install-OpenWhispr {
+    Write-Step "OpenWhispr (voice input)..."
+    # OpenWhispr is an Electron app installed to LOCALAPPDATA
+    $appPath = "$env:LOCALAPPDATA\Programs\openwhispr\OpenWhispr.exe"
+    if (Test-Path $appPath) { Write-Skipped "OpenWhispr"; return }
+    try {
+        $release = Invoke-RestMethod "https://api.github.com/repos/OpenWhispr/openwhispr/releases/latest"
+        $asset   = $release.assets | Where-Object { $_.name -like "OpenWhispr-Setup-*.exe" } | Select-Object -First 1
+        if (-not $asset) { throw "No Windows installer found in latest release" }
+        $tmpFile = "$env:TEMP\OpenWhispr-Setup.exe"
+        Invoke-WebRequest $asset.browser_download_url -OutFile $tmpFile
+        Start-Process $tmpFile -ArgumentList "/S" -Wait
+        Remove-Item $tmpFile -ErrorAction SilentlyContinue
+        Write-Success "OpenWhispr"
+    } catch {
+        Write-Failed "OpenWhispr" "Download manually from https://openwhispr.com"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
@@ -167,4 +186,5 @@ Install-VSCode
 Install-NodeJS
 Install-Uv
 Install-ClaudeCode
+Install-OpenWhispr
 Show-Summary
