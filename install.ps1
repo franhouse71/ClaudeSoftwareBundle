@@ -202,6 +202,8 @@ function Deploy-AHKScript {
     }
 
     try {
+        # Stop any running AHK instances so the file is not locked during overwrite
+        Get-Process -Name "AutoHotkey64", "AutoHotkey" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
         Invoke-WebRequest "$GITHUB_RAW/assets/MyShortCuts.ahk" -OutFile $ahkDest -UseBasicParsing
         $startupValue = "`"$ahkExe`" `"$ahkDest`""
         Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "MyAHKShortcuts" -Value $startupValue
