@@ -191,6 +191,29 @@ function Install-VSCodeExtensions {
     }
 }
 
+function Deploy-AHKScript {
+    Write-Step "AutoHotkey script + startup registration..."
+    $ahkDir  = "$env:USERPROFILE\Documents\AutoHotkey"
+    $ahkDest = "$ahkDir\MyShortCuts.ahk"
+    $ahkExe  = "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey64.exe"
+
+    if (-not (Test-Path $ahkDir)) {
+        New-Item -ItemType Directory -Path $ahkDir -Force | Out-Null
+    }
+
+    try {
+        Invoke-WebRequest "$GITHUB_RAW/assets/MyShortCuts.ahk" -OutFile $ahkDest
+        $startupValue = "`"$ahkExe`" `"$ahkDest`""
+        Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "MyAHKShortcuts" -Value $startupValue
+        if (Test-Path $ahkExe) {
+            Start-Process $ahkExe -ArgumentList "`"$ahkDest`""
+        }
+        Write-Success "AHK Script + startup"
+    } catch {
+        Write-Failed "AHK Script" "Copy assets/MyShortCuts.ahk to $ahkDest manually"
+    }
+}
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 Write-Banner
 if (-not (Ensure-Winget)) { exit 1 }
@@ -203,4 +226,5 @@ Install-Uv
 Install-ClaudeCode
 Install-OpenWhispr
 Install-VSCodeExtensions
+Deploy-AHKScript
 Show-Summary
